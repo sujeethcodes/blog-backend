@@ -46,5 +46,18 @@ controller.getUser = async(req, res)=>{
     }
 }
 
-
+controller.getAllUser = async(req, res)=>{
+    try{
+        const findAccount = await User.find()
+        if(!findAccount) return res.json({status:406, message:"account not found"})
+            return res.json({status:200, message:"success", 
+                userDetails : findAccount.map((each)=>({
+                    name:each?.name,
+                    email:each?.email
+                }))
+        })
+    }catch (e) {
+        return res.json({status:500, message:e.message})
+    }
+}
 module.exports = controller
