@@ -35,4 +35,16 @@ controller.editUser = async(req, res)=>{
     }
    
 } 
+
+controller.getUser = async(req, res)=>{
+    try{
+        const findAccount = await User.findOne({email:req?.query?.email})
+        if(!findAccount) return res.json({status:406, message:"account not found"})
+            return res.json({status:200, message:"success", userDetails:{name:findAccount?.name, email:findAccount?.email, }})
+    }catch (e) {
+        return res.json({status:500, message:e.message})
+    }
+}
+
+
 module.exports = controller
