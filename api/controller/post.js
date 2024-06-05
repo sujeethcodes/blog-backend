@@ -15,6 +15,7 @@ controller.createPost = async (req, res) => {
     const createPost = await Post.create({
       userId: req.body?.userId,
       post: post.filename,
+      description : req?.body?.description
     });
     if (!createPost)
       return res

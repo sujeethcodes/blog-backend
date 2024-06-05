@@ -1,6 +1,8 @@
 require("dotenv").config()
 const User = require("../model/user")
 const bcrypt = require("bcrypt")
+const Post = require("../model/post")
+const mongoose = require("mongoose")
 const controller = {}
 controller.createUser = async(req, res)=>{
     try {
@@ -36,18 +38,23 @@ controller.editUser = async(req, res)=>{
    
 } 
 
-controller.getUser = async(req, res)=>{
-    try{
-        const findAccount = await User.findOne({email:req?.query?.email})
-        if(!findAccount) return res.json({status:406, message:"account not found"})
-            return res.json({status:200, message:"success", userDetails:{name:findAccount?.name, email:findAccount?.email, }})
-    }catch (e) {
-        return res.json({status:500, message:e.message})
+controller.getUser = async (req, res) => {
+    try {
+        const findAccount = await User.findOne({_id:new mongoose.Types.ObjectId(req.query.userId)});
+        if (!findAccount) {
+            return res.status(406).json({ status: 406, message: "Account not found" });
+        }
+        const findPost = await Post.find({userId : findAccount._id})
+
+        return res.status(200).json({ status: 200, message: "Success",  userDetails: { ...findAccount.toJSON(),  _id : findPost?._id, post:findPost?.post, description:findPost?.description} });
+    } catch (e) {
+        return res.status(500).json({ status: 500, message: e.message });
     }
-}
+};
 
 controller.getAllUser = async(req, res)=>{
     try{
+        
         const findAccount = await User.find()
         if(!findAccount) return res.json({status:406, message:"account not found"})
             return res.json({status:200, message:"success", 

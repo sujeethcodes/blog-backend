@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const getUser = Joi.object({
-    email: Joi.string().email().required(),
+    userId: Joi.string().required(),
 });
 
 const getUserValidation = (req, res, next) => {
