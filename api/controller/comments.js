@@ -42,4 +42,7 @@ controller.editComments = async (req, res) => {
   }
 };
 
+controller.deleteComments = async (req, res) => {
+  res.json("working");
+};
 module.exports = controller;
