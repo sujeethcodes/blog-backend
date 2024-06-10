@@ -43,6 +43,17 @@ controller.editComments = async (req, res) => {
 };
 
 controller.deleteComments = async (req, res) => {
-  res.json("working");
+  const deleteComments = await Comment.findOneAndUpdate(
+    {
+      userId: req?.body?.userId,
+    },
+    {
+      $pull: {
+        comments: { postId: req?.body?.postId, _id: req?.body?.commentId },
+      },
+    }
+  );
+  if (!deleteComments) return res.json("failed");
+  res.json("success");
 };
 module.exports = controller;
