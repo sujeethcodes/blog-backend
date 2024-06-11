@@ -94,11 +94,17 @@ controller.signIn = async (req, res) => {
     const signIn = await User.findOne({
       email: req?.body?.email,
     });
-    const password = bcrypt.compare(req?.body?.password, signIn.password);
+    if (!signIn) {
+      return res.json({ status: 404, message: "User not found" });
+    }
+    const passwordMatch = await bcrypt.compare(
+      req?.body?.password,
+      signIn.password
+    );
     if (password) {
-      return res.json("working");
+      return res.json({ status: 200, message: "login successfully" });
     } else {
-      return res.json("err");
+      return res.json({ status: 406, message: "login Failed" });
     }
   } catch (err) {
     return res.json({ message: err.message });
